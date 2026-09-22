@@ -1,14 +1,14 @@
 ---
 name: ocfl
-description: Guide for automating operations on existing OCFL (Oxford Common File Layout) v1.0 and v1.1 repositories — ingesting, updating, validating, and deleting objects. Use when reading or writing OCFL storage roots, object roots, inventories, version directories, or when implementing/reviewing code that manipulates OCFL structures.
+description: Guide for working with OCFL (Oxford Common File Layout) repositories. Use when reading or writing OCFL storage roots, object roots, inventories, version directories, or when implementing/reviewing code that manipulates OCFL structures.
 ---
 
 # OCFL Automation Guide
 
-OCFL v1.0 and v1.1 define an application-independent, filesystem-based layout for
-versioned digital objects: each object is a directory of immutable version
-directories plus a JSON inventory that maps content-addressed files (digests)
-to logical paths. A repository must be rebuildable from the storage root alone.
+OCFL (v1.0 and v1.1) defines an application-independent, filesystem-based layout
+for versioned digital objects: each object is a directory of immutable version
+directories plus a JSON inventory that maps content-addressed files (digests) to
+logical paths. A repository must be rebuildable from the storage root alone.
 Determine the governing version from the storage-root and object namaste files
 before applying a requirement.
 
@@ -16,7 +16,7 @@ before applying a requirement.
 
 | Resource | Use it for |
 |----------|-----------|
-| `references/ocfl-spec-1.1.md` | Full normative v1.1 spec. Key sections: §3.3 version directories, §3.5 inventory, §3.6–3.7 inventory digests, §4 storage root |
+| `references/ocfl-spec-1 .1.md` | Full normative v1.1 spec. Key sections: §3.3 version directories, §3.5 inventory, §3.6–3.7 inventory digests, §4 storage root |
 | `references/ocfl-spec-1.0.html` | Full published normative v1.0 specification (unaltered HTML) |
 | `references/validation-codes.md` | Lookup table of every `E###` (MUST) and `W###` (SHOULD) code with its requirement text — use it to name findings and to check what a code actually asserts |
 | `references/extensions/` | The registered community extensions, one file per extension (see below) |
@@ -27,20 +27,20 @@ version. Both bundled specs carry validation codes inline as HTML spans
 (for example, `<span id="E064" ...>`); `references/validation-codes.md`
 resolves a bare code to its requirement without searching the spec.
 
-### Bundled extensions
+### Community extensions
 
-`references/extensions/` holds the registered specifications. Storage layouts
+`references/extensions/` holds specs for registered community extensions. Storage layouts
 (`0002`, `0003`, `0004`, `0006`, `0007`, `0010`, `0011`, `0012`) define id →
 path mapping; read the one named in `ocfl_layout.json` rather than inferring
 the algorithm. The rest cover digest algorithms (`0001`, `0009`), mutable head
 (`0005`), the schema registry (`0008`), and the extension template (`0000`).
 
-## Anatomy
+## Storage Root & Object Structure
 
 An OCFL repository and object structure consists of:
 
 - `[storage_root]`
-  - `0=ocfl_1.1` (namaste file; content: `ocfl_1.1\n`)
+  - `0=ocfl_1.1` (namaste file; content: `ocfl_1.1\n` with OCFL spec version)
   - `ocfl_layout.json` (optional layout configuration: `{"extension": "...", "description": "..."}`)
   - `extensions/` (optional storage-root extensions)
   - `<hierarchy>/[object_root]` (layout-determined path per object)
@@ -53,15 +53,21 @@ An OCFL repository and object structure consists of:
       - `inventory.json` + sidecar (`inventory.json.sha512`; SHOULD be present per version)
       - `content/` (version content directory; name overridable via `contentDirectory`)
 
-Inventory required keys: `id` (URI-ish, never changes), `type`
-(`https://ocfl.io/1.1/spec/#inventory`), `digestAlgorithm` (`sha512` or
-`sha256`; prefer `sha512`), `head`, `manifest` (digest → array of content
-paths relative to object root), `versions` (name → `{created, state, message,
-user}`). Optional: `contentDirectory` (fixed at v1, never changes), `fixity`
-(algorithm → digest → content paths).
+Inventory required keys:
+- `id`: URI-ish, never changes.
+- `type`: URL to version-specific inventory spec
+  (`https://ocfl.io/1.1/spec/#inventory`).
+- `digestAlgorithm`: `sha512` or `sha256`; prefer `sha512`.
+- `head`: name of the current/head version.
+- `manifest`: map of digest → array of content paths relative to object root.
+- `versions`: map of version name → `{created, state, message, user}`.
 
-`state` maps digests → logical paths (the user-visible file tree at that
-version); every state digest MUST exist as a manifest key. Deduplication:
+Optional keys:
+- `contentDirectory`: fixed at v1, never changes.
+- `fixity`: map of algorithm → digest → content paths.
+
+Versions `state` maps digests → logical paths (the user-visible file tree at
+that version); every state digest MUST exist as a manifest key. Deduplication:
 unchanged files get no new content — their digest already resolves via the
 manifest to an earlier version's content path.
 
@@ -86,18 +92,14 @@ manifest to an earlier version's content path.
    storage hierarchy beyond what the spec names; no empty directories under
    the storage root (E001, E015, E072, E073).
 
-## Operations
+## Common Operations
 
-Prefer an existing OCFL client (github.com/srerickson/ocfl-tools) over
-hand-rolling these steps; use the steps to drive or verify the tool.
+### Locate an object by its ID
 
-### Locate an object
-
-Read `ocfl_layout.json` → apply the named layout extension (its spec is in
-`references/extensions/`) to map id → path. If absent, check the storage
-root's own `extensions/` for a layout config, else walk the hierarchy
-for `0=ocfl_object_*` namaste files. After resolving, confirm
-`inventory.json` `id` matches the requested id — never trust the path alone.
+The storage root must define a layout extension to map object IDs to object
+paths: Read `ocfl_layout.json` → apply the named layout extension (its spec is
+in `references/extensions/`) to map id → path. After resolving, confirm
+`inventory.json` `id` matches the requested id.
 
 ### Ingest (new object)
 
@@ -124,17 +126,16 @@ for `0=ocfl_object_*` namaste files. After resolving, confirm
 5. Update `head`, add manifest (and optional fixity) entries.
 6. Write order: `vN+1` content → `vN+1/inventory.json` + sidecar → replace
    root `inventory.json` + sidecar last.
-7. OCFL has no locking. Serialize writers externally and re-verify `head`
-   hasn't moved immediately before step 6.
+
+OCFL has no locking -- implementations needs to take care 
 
 For anything that must survive interruption — resumable ingest, crash recovery,
 rollback, concurrent writers — serialize the new inventory once and cache the
-bytes before any storage write;
-write directly to final paths (same code path for POSIX and S3); always write
-`vN+1/inventory.json` + sidecar before touching the root, so an interrupted
-commit is self-describing; treat the **root sidecar** as the sole commit point;
-record phase durably in a log outside the storage root, ahead of the action it
-authorizes.
+bytes before any storage write; write directly to final paths (same code path
+for POSIX and S3); always write `vN+1/inventory.json` + sidecar before touching
+the root, so an interrupted commit is self-describing; treat the **root
+sidecar** as the sole commit point; record phase durably in a log outside the
+storage root, ahead of the action it authorizes.
 
 An object created under OCFL 1.0 may stay 1.0 or be upgraded (new namaste
 file + `type` value) — a version must conform to the same or later spec
@@ -155,8 +156,7 @@ first:
 - every state digest resolves in the manifest; every manifest path exists on
   disk; every file under each `content/` appears in the manifest (E023)
 - prior-version inventories agree with the current one on prior states
-- full fixity: recompute file digests against manifest (and `fixity` block) —
-  the expensive step; make it separately schedulable in automations
+- full fixity: recompute file digests against manifest (and `fixity` block)
 
 ### Delete
 
@@ -172,40 +172,9 @@ Two distinct operations — always confirm which one is intended, and run
 - **Purge (destructive, outside the spec):** removing content from history
   or deleting a whole object means removing the object root (plus any
   now-empty parent directories, since empty dirs are forbidden) or rebuilding
-  the object without the offending bitstreams. The spec provides no audit
-  trail for this — record the action in an external log and/or the surviving
-  object's `logs/` directory, and require explicit confirmation first.
+  the object without the offending bitstreams. 
 
-## Pitfalls checklist
-
-- [ ] Treating digests as case-sensitive strings when diffing inventories.
-- [ ] Regenerating the root inventory instead of copying the head version's
-      (whitespace/key-order drift breaks the "same file" requirement).
-- [ ] Writing the sidecar before finishing inventory edits.
-- [ ] Assuming `content` — honor `contentDirectory`.
-- [ ] Assuming `v1`, `v2`… — honor zero-padded conventions on update.
-- [ ] Emitting `created` timestamps without timezone or with sub-second-only
-      granularity mismatch (RFC 3339 required).
-- [ ] Adding files under a prior version directory "for efficiency".
-- [ ] Deleting an object without removing now-empty hierarchy directories.
-- [ ] Skipping the id-in-inventory check before destructive operations.
-- [ ] Assuming a version directory contains an `inventory.json` — it is a
-      SHOULD (W010), not a MUST, so head cannot be recovered by scanning for
-      the highest version with a valid inventory.
-- [ ] Writing an inventory or sidecar in place instead of temp-then-rename
-      (POSIX) — a torn write to the root inventory loses the object.
-- [ ] Leaving anything between the root `inventory.json` and its sidecar write:
-      in that window the object fails validation outright (E060).
-- [ ] Re-serializing the inventory on a resumed operation instead of replaying
-      cached bytes (drift breaks the sidecar and E064).
-- [ ] Trusting size+mtime alone that a staged source file hasn't changed since
-      its digest was recorded.
-
-## Citations & Attribution
-
-This skill is adapted from the OCFL skill in [srerickson/swamp-digipres](https://github.com/srerickson/swamp-digipres) (.claude/skills/ocfl).
-
-### Primary References
+## References
 
 - **OCFL Specifications**:
   - Oxford Common File Layout (OCFL) Specification, Version 1.1: <https://ocfl.io/1.1/spec/>
