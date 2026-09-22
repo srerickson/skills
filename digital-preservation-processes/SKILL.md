@@ -7,8 +7,6 @@ description: Use when designing, evaluating, implementing, or auditing digital p
 
 A specialized skill for designing, structuring, evaluating, and implementing digital preservation workflows and pipelines for Trustworthy Digital Archives (TDAs), grounded in the **Core Preservation Processes (CPPs)** developed by the European Open Science Cloud (EOSC) EDEN project.
 
----
-
 ## 1. Scope & Purpose
 
 This skill guides the implementation of operational digital preservation workflows across the entire digital archiving lifecycle:
@@ -21,49 +19,13 @@ This skill guides the implementation of operational digital preservation workflo
 
 Each Core Preservation Process (CPP-001 through CPP-030) is documented in full operational detail in the [references/](./references/) directory.
 
----
-
 ## 2. Conceptual Model (EOSC EDEN CPP)
 
 The CPP conceptual model establishes a unified terminology and entity hierarchy harmonizing the **OAIS Reference Model (ISO 14721 / CCSDS 650.0-M-3)** and the **PREMIS Data Dictionary for Preservation Metadata (v3.0)**.
 
-### 2.1 The Three Core High-Level Entities
+CPP model defines three high-level abstractions: Object, Metadata, and Information Package.
 
-```
-+---------------------------------------------------------------------------------+
-|                              Information Package                                |
-|   (SIP: Submission, AIP: Archival [as preserved], DIP: Dissemination [access])  |
-|                                                                                 |
-|  +-------------------------------------+  +----------------------------------+  |
-|  |        (Information) Object         |  |             Metadata             |  |
-|  |                                     |  |                                  |  |
-|  | +---------------------------------+ |  | +------------------------------+ |  |
-|  | |      Intellectual Entity        | |  | |    Descriptive Metadata      | |  |
-|  | | (Coherent unit described as one)| |  | | (Context, discovery, title,   | |  |
-|  | +---------------------------------+ |  | |  creators, subjects)          | |  |
-|  |                 |                   |  | +------------------------------+ |  |
-|  |                 v                   |  | +------------------------------+ |  |
-|  | +---------------------------------+ |  | |    Administrative Metadata   | |  |
-|  | |        Representation           | |  | | (Management through processes) | |
-|  | | (Files + Structural metadata)   | |  | | - Fixity Metadata (checksums)  | |
-|  | +---------------------------------+ |  | | - Technical Metadata (codecs) | |  |
-|  |                 |                   |  | | - Provenance Metadata (events)| |  |
-|  |                 v                   |  | | - Rights Metadata (statements)| |  |
-|  | +---------------------------------+ |  | | - Structural Metadata (links) | |  |
-|  | |             File(s)             | |  | +------------------------------+ |  |
-|  | | (Byte sequences in filesystem)  | |  +----------------------------------+  |
-|  | +---------------------------------+ |                                        |
-|  |                 |                   |                                        |
-|  |                 v                   |                                        |
-|  | +---------------------------------+ |                                        |
-|  | |           Bitstream(s)          | |                                        |
-|  | | (Contiguous/meaningful streams) | |                                        |
-|  | +---------------------------------+ |                                        |
-|  +-------------------------------------+                                        |
-+---------------------------------------------------------------------------------+
-```
-
-#### 1. (Information) Object
+### 2.1 (Information) Object
 The entity that must be preserved as a priority. Digital in nature, decomposed per PREMIS levels:
 - **Intellectual Entity**: A coherent set of content described as a unit (e.g., a book, dataset, video, photograph, website).
 - **Representation**: A set of stored files and structural metadata needed to provide a complete rendition of an Intellectual Entity (e.g., TIFF master representation vs. PDF access representation).
@@ -71,7 +33,7 @@ The entity that must be preserved as a priority. Digital in nature, decomposed p
 - **Bitstream**: Contiguous or non-contiguous data within a file with meaningful common properties requiring independent description or processing (e.g., audio/video streams in an MP4, embedded ICC profiles, thumbnail bitstreams).
 - **Environment Object**: Software, operating system, and hardware stack specifications preserved to render an Object via emulation or virtualisation.
 
-#### 2. Metadata
+### 2.2 Metadata
 Structured, machine-actionable textual information describing preserved Objects:
 - **Descriptive Metadata**: Enables discovery, identification, and understanding of context (Dublin Core, DataCite, MODS, etc.).
 - **Administrative Metadata**: Operates preservation processes, subdivided into:
@@ -81,13 +43,11 @@ Structured, machine-actionable textual information describing preserved Objects:
   - *Rights Metadata*: Machine-actionable rights statements, copyright status, licences, and access constraints (`CPP-020`).
   - *Structural Metadata*: Maps internal relationships between files, representations, and intellectual entities.
 
-#### 3. Information Package (IP)
+### 2.3 Information Package (IP)
 Conceptual container gathering Objects and associated Metadata:
 - **Submission Information Package (SIP)**: Delivered by producer or submitting system to the TDA (`CPP-029`).
 - **Archival Information Package (AIP)**: Formatted, encapsulated, and versioned package preserved in TDA storage (`CPP-006`, `CPP-021`).
 - **Dissemination Information Package (DIP)**: Derived from AIPs and provided to consumers/discovery interfaces (`CPP-025`, `CPP-028`).
-
----
 
 ## 3. Trustworthy Digital Archive (TDA) & Policy Hierarchy
 
@@ -109,8 +69,6 @@ Workflows must be parameterized by specific TDA policies:
 - **Access & Rights Policies**: Authenticated access levels, embargoes, and licensing rules (`CPP-020`, `CPP-025`).
 - **Retention & Exit Scenario Plans**: Retention periods, deaccessioning/disposal (`CPP-017`), and wholesale repository migration plans (`CPP-006`).
 
----
-
 ## 4. CPP Process Relationships
 
 Processes in digital preservation workflows interact via formal relationship types:
@@ -126,8 +84,6 @@ Processes in digital preservation workflows interact via formal relationship typ
 | **Alternative to** | *Alternative to* | Strategy choice (e.g., `CPP-014 File Migration` vs. `CPP-015 Emulation and Rendering Tools`). |
 | **Affinity with** | *Affinity with* | Conceptual similarity (e.g., `CPP-014 File Migration` and `CPP-027 File Repair`). |
 | **Not to be confused with** | *Not to be confused with* | Clear boundary distinction (e.g., Migration transforms the primary preservation representation; Derivatives produce secondary dissemination copies). |
-
----
 
 ## 5. Catalog of Core Preservation Processes (CPP-001 – CPP-030)
 
@@ -166,69 +122,48 @@ Detailed operational specifications for each process are located in `references/
 | **CPP-029** | Ingest | Orchestrates the end-to-end transformation of an SIP into an AIP | [CPP-029.md](./references/CPP-029.md) |
 | **CPP-030** | Refreshment | Migrates data onto new storage media to prevent physical media failure | [CPP-030.md](./references/CPP-030.md) |
 
----
 
 ## 6. Digital Preservation Workflow Implementation Patterns
 
 When designing or implementing preservation pipelines, follow these standard orchestration patterns:
 
 ### Pattern A: Standard Ingest Pipeline (`CPP-029`)
-```
-SIP Submission
-      │
-      ▼
-1. Virus Scanning (CPP-007) ──[Infected]──► Quarantine & Notification
-      │ [Clean]
-      ▼
-2. Checksum Validation (CPP-002) (Verify producer checksums)
-      │
-      ▼
-3. Characterisation:
-   ├─ Format Identification (CPP-008) (e.g. Siegfried/DROID -> PUID)
-   ├─ Metadata Extraction (CPP-009) (e.g. ExifTool, Apache Tika, FITS)
-   └─ Format Validation (CPP-010) (e.g. JHOVE, VeraPDF)
-      │
-      ▼
-4. Data Quality & Rights Assessment (CPP-019, CPP-020)
-      │
-      ▼
-5. Optional Preservation Actions:
-   ├─ File Normalisation (CPP-026) (to preferred format)
-   └─ Creation of Derivatives (CPP-028) (for access)
-      │
-      ▼
-6. Package & Register:
-   ├─ Checksum Generation (CPP-001) (New hashes for transformed/preservation files)
-   ├─ Identifier Management (CPP-005) (Mint PID / Archival ID)
-   ├─ Metadata & Provenance Logging (CPP-016) (PREMIS events)
-   └─ AIP Assembly & Storage (CPP-021)
-      │
-      ▼
-7. Replication (CPP-011) (Disperse across redundant storage nodes)
-      │
-      ▼
-8. Enable Discovery & Access (CPP-024, CPP-025)
-```
+
+1. **Submission & Quarantine**:
+   - Receive SIP Submission.
+   - Run Virus Scanning (`CPP-007`). If infected, route to quarantine and issue notification; if clean, proceed.
+2. **Fixity Verification**:
+   - Checksum Validation (`CPP-002`) to verify producer-supplied checksums.
+3. **Preservation Characterisation**:
+   - Format Identification (`CPP-008`): identify formats and assign PUIDs (e.g., Siegfried, DROID).
+   - Metadata Extraction (`CPP-009`): extract technical and structural metadata (e.g., ExifTool, Apache Tika, FITS).
+   - Format Validation (`CPP-010`): validate syntactical conformance (e.g., JHOVE, VeraPDF).
+4. **Appraisal & Policy Checks**:
+   - Perform Data Quality Assessment (`CPP-019`) and Rights Management (`CPP-020`).
+5. **Preservation Actions (Optional)**:
+   - File Normalisation (`CPP-026`): convert non-preferred formats into preservation masters.
+   - Creation of Derivatives (`CPP-028`): generate access-ready dissemination formats.
+6. **Packaging & Archival Registration**:
+   - Checksum Generation and Recording (`CPP-001`): compute hashes for transformed and preservation files.
+   - Identifier Management (`CPP-005`): mint archival identifiers and PIDs.
+   - Metadata Ingest and Management (`CPP-016`): log PREMIS provenance events and metadata.
+   - AIP Assembly & Storage (`CPP-021`): assemble and store versioned AIP packages.
+7. **Redundancy**:
+   - Replication (`CPP-011`): disperse replicas across distinct storage nodes.
+8. **Dissemination**:
+   - Enabling Discovery (`CPP-024`) and Enabling Access (`CPP-025`): index metadata and enable access delivery.
 
 ### Pattern B: Scheduled Routine Maintenance Pipeline
-```
-Cron / Scheduler
-      │
-      ▼
-1. Storage Integrity Checking (CPP-003)
-      │
-      ├──[Mismatch/Corruption]──► Data Corruption Management (CPP-004)
-      │                                └── Restore from replica (CPP-011)
-      ▼
-2. Media Refreshment Check (CPP-030)
-      │
-      └──[Media Aging]──────────► Migrate bytes to new media
-      ▼
-3. Format Risk & Obsolescence Audit (CPP-018, CPP-023, CPP-013)
-      │
-      └──[Format at Risk]───────► Risk Mitigation Planning (CPP-012)
-                                       └── File Migration (CPP-014)
-```
+
+1. **Integrity Monitoring**:
+   - Integrity Checking (`CPP-003`): run scheduled storage fixity audits.
+   - If mismatch or corruption is detected, trigger Data Corruption Management (`CPP-004`) to isolate the issue and restore from replica (`CPP-011`).
+2. **Physical Storage Media Maintenance**:
+   - Media Refreshment Check (`CPP-030`): evaluate storage media lifecycle.
+   - If media aging or failure risk is identified, migrate bytes to new media.
+3. **Format Risk & Obsolescence Monitoring**:
+   - Assess repository formats using Community Watch (`CPP-018`), Risk Properties Definition (`CPP-023`), and Object Management Reporting (`CPP-013`).
+   - If a format is at risk, initiate Risk Mitigation (`CPP-012`) planning and execute File Migration (`CPP-014`).
 
 ---
 
