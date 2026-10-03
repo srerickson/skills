@@ -24,6 +24,7 @@ Skills are based on work listed below.
 - **Go style**:
   - The Go Authors. *Effective Go*. [https://go.dev/doc/effective_go](https://go.dev/doc/effective_go).
   - The Go Authors. *Go Code Review Comments*. [https://go.dev/wiki/CodeReviewComments](https://go.dev/wiki/CodeReviewComments).
+  - Mat Ryer. *How I write HTTP services in Go after 13 years*. Grafana Labs, 2024. [https://grafana.com/blog/2024/02/09/how-i-write-http-services-in-go-after-13-years/](https://grafana.com/blog/2024/02/09/how-i-write-http-services-in-go-after-13-years/).
 
 - **OCFL**:
   - Oxford Common File Layout (OCFL) Editorial Group. *Oxford Common File Layout Specification*, Version 1.1, 2022. [https://ocfl.io/1.1/spec/](https://ocfl.io/1.1/spec/).
