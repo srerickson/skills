@@ -12,6 +12,7 @@ A repository of agent skills, organized with one skill per directory.
 | **go-style** | [`go-style/`](./go-style/) | Personal conventions for writing and reviewing Go code. |
 | **ocfl** | [`ocfl/`](./ocfl/) | Guide for working with OCFL (Oxford Common File Layout) repositories. Use when reading or writing OCFL storage roots, object roots, inventories, version directories, or when implementing/reviewing code that manipulates OCFL structures. |
 | **premis** | [`premis/`](./premis/) | Developing PREMIS 3.0 implementations, metadata models, XML serializations, and digital preservation metadata. |
+| **terminal-screenshots** | [`terminal-screenshots/`](./terminal-screenshots/) | Capture high-resolution, pixel-perfect screenshots of terminal sessions, CLI commands, interactive TUI apps, and Opencode sessions as PNG, SVG, or WebP images. |
 
 ## References
 
@@ -31,3 +32,7 @@ Skills are based on work listed below.
 
 - **PREMIS**:
   - PREMIS Editorial Committee. *PREMIS Data Dictionary for Preservation Metadata*, Version 3.0. Library of Congress, November 2015. [https://www.loc.gov/standards/premis/v3/premis-3-0-final.pdf](https://www.loc.gov/standards/premis/v3/premis-3-0-final.pdf).
+
+- **Terminal Screenshots**:
+  - Charmbracelet, Inc. *freeze: Generate images of code and terminal output*. [https://github.com/charmbracelet/freeze](https://github.com/charmbracelet/freeze).
+  - Nicholas Marriott et al. *tmux: A terminal multiplexer*. [https://github.com/tmux/tmux](https://github.com/tmux/tmux).
