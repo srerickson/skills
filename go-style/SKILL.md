@@ -15,8 +15,6 @@ Before committing, run:
 
 - `go fmt ./...`
 - `go vet ./...`
-- `go fix ./...` to apply modernizations allowed by the `go.mod` Go version.
-  Review the diff, since some fixes, such as `omitzero`, can change behavior.
 - `go test ./...`
 
 ## Declaration order
