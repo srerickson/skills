@@ -9,6 +9,7 @@ A repository of agent skills, organized with one skill per directory.
 | Skill | Directory | Description |
 | :--- | :--- | :--- |
 | **digital-preservation-processes** | [`digital-preservation-processes/`](./digital-preservation-processes/) | Digital preservation workflows and pipeline design for Trustworthy Digital Archives (TDAs) based on the EOSC EDEN Core Preservation Processes (CPPs). |
+| **go-adversarial-review** | [`go-adversarial-review/`](./go-adversarial-review/) | Adversarial, Go-specific code review of a pull request or branch compared to main, ending with a `VERDICT: PASS` or `VERDICT: FAIL` line. |
 | **go-style** | [`go-style/`](./go-style/) | Personal conventions for writing and reviewing Go code. |
 | **ocfl** | [`ocfl/`](./ocfl/) | Guide for working with OCFL (Oxford Common File Layout) repositories. Use when reading or writing OCFL storage roots, object roots, inventories, version directories, or when implementing/reviewing code that manipulates OCFL structures. |
 | **premis** | [`premis/`](./premis/) | Developing PREMIS 3.0 implementations, metadata models, XML serializations, and digital preservation metadata. |
@@ -21,6 +22,9 @@ Skills are based on work listed below.
 
 - **Core Preservation Processes (CPPs)**:
   - EOSC EDEN T1.2, Micky Lindlar, Bertrand Caron, et al. *M1.1 Report on Identification of Core Preservation Processes*. Zenodo, 2025. [https://doi.org/10.5281/ZENODO.16992451](https://doi.org/10.5281/ZENODO.16992451).
+
+- **Go adversarial review**:
+  - webframp. *swamp-extensions*, CI workflow adversarial-review job. [https://github.com/webframp/swamp-extensions/blob/main/.github/workflows/ci.yml](https://github.com/webframp/swamp-extensions/blob/main/.github/workflows/ci.yml).
 
 - **Go style**:
   - The Go Authors. *Effective Go*. [https://go.dev/doc/effective_go](https://go.dev/doc/effective_go).
