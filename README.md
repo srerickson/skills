@@ -10,6 +10,7 @@ A repository of agent skills, organized with one skill per directory.
 | :--- | :--- | :--- |
 | **digital-preservation-processes** | [`digital-preservation-processes/`](./digital-preservation-processes/) | Digital preservation workflows and pipeline design for Trustworthy Digital Archives (TDAs) based on the EOSC EDEN Core Preservation Processes (CPPs). |
 | **go-adversarial-review** | [`go-adversarial-review/`](./go-adversarial-review/) | Adversarial, Go-specific code review of a pull request or branch compared to main, ending with a `VERDICT: PASS` or `VERDICT: FAIL` line. |
+| **go-design-review** | [`go-design-review/`](./go-design-review/) | Adversarial review of a proposed Go API or package design before it is implemented, drawing on Go API idiom and domain-driven design, ending with a `VERDICT: PASS` or `VERDICT: FAIL` line. |
 | **go-style** | [`go-style/`](./go-style/) | Personal conventions for writing and reviewing Go code. |
 | **ocfl** | [`ocfl/`](./ocfl/) | Guide for working with OCFL (Oxford Common File Layout) repositories. Use when reading or writing OCFL storage roots, object roots, inventories, version directories, or when implementing/reviewing code that manipulates OCFL structures. |
 | **premis** | [`premis/`](./premis/) | Developing PREMIS 3.0 implementations, metadata models, XML serializations, and digital preservation metadata. |
@@ -25,6 +26,13 @@ Skills are based on work listed below.
 
 - **Go adversarial review**:
   - webframp. *swamp-extensions*, CI workflow adversarial-review job. [https://github.com/webframp/swamp-extensions/blob/main/.github/workflows/ci.yml](https://github.com/webframp/swamp-extensions/blob/main/.github/workflows/ci.yml).
+
+- **Go design review**:
+  - Eric Evans. *Domain-Driven Design: Tackling Complexity in the Heart of Software*. Addison-Wesley, 2003.
+  - Vaughn Vernon. *Implementing Domain-Driven Design*. Addison-Wesley, 2013.
+  - Alistair Cockburn. *Hexagonal Architecture*, 2005. [https://alistair.cockburn.us/hexagonal-architecture/](https://alistair.cockburn.us/hexagonal-architecture/).
+  - John Ousterhout. *A Philosophy of Software Design*. Yaknyam Press, 2018.
+  - Ben Johnson. *Standard Package Layout*, 2016. [https://www.gobeyond.dev/standard-package-layout/](https://www.gobeyond.dev/standard-package-layout/).
 
 - **Go style**:
   - The Go Authors. *Effective Go*. [https://go.dev/doc/effective_go](https://go.dev/doc/effective_go).

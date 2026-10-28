@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: upload-sessions-synthetic
+expected_outcome: |
+  The review blocks the design. It finds that Manager.Session hands out a
+  mutable session that handlers change and save outside the lifecycle, that
+  the in-process lock doesn't cover three replicas, the dead end after a
+  crash between Finish's rename and cleanup, string-matched errors in the
+  handler, and direct reads of the environment and clock.
+context:
+  scaffold_script: place-files.sh

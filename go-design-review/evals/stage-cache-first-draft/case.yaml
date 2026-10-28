@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: stage-cache-first-draft
+expected_outcome: |
+  The review blocks the plan. It finds that the stage file's persistence and
+  the commit lifecycle live in the CLI (run) package instead of the stage
+  package, flags applyStage's mode parameters, finds that a first-attempt
+  update conflict leaves a finalized stage with no way out, and sketches a
+  revised API.
+context:
+  scaffold_script: place-files.sh

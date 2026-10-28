@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: stage-file-refactor
+expected_outcome: |
+  The review endorses the core boundary (stage.File owns persistence and the
+  commit lifecycle; run only formats messages) and does not invent blocking
+  problems with it. It finds failure paths where saving or removing the
+  stage file fails partway, and addresses concurrent use of a stage file.
+context:
+  scaffold_script: place-files.sh
