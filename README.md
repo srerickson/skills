@@ -1,6 +1,8 @@
 # Agent Skills Repository
 
 A repository of agent skills, organized with one skill per directory.
+Evals live under `evals/<skill>/`, outside the skill directories, so they
+aren't installed with the skills.
 
 ---
 
